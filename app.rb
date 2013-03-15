@@ -61,7 +61,7 @@ class LatexConvert < Sinatra::Base
       texable_files.each do |tex_file|
         `rubber -d --into #{tmp_dir} #{new_dir}/#{tex_file}`
       end
-      `zip -r9 #{tmp_dir}.zip #{tmp_dir}`
+      `zip -R9 #{tmp_dir}.zip #{tmp_dir}`
       zip_data = File.read("#{tmp_dir}.zip")
       `rm -rf public/files/#{random_name}`
       `rm -rf public/files/#{random_name}.zip`
