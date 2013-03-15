@@ -66,8 +66,7 @@ class LatexConvert < Sinatra::Base
       `rm -rf public/files/#{random_name}`
       `rm -rf public/files/#{random_name}.zip`
       `rm -rf public/files/finished_#{random_name}`
-      `rm -rf public/files/finished_#{random_name}.zip`
-      send_data zip_data, :filename => "#{filename}.zip"
+      send_file "#{tmp_dir}.zip", :filename => "#{filename}.zip"
     end
 
     redirect '/'
