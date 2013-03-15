@@ -42,23 +42,32 @@ class LatexConvert < Sinatra::Base
     if params[:file]
       filename = params[:file][:filename]
       file = params[:file][:tempfile]
-
-      File.open(File.join(settings.files, filename), 'wb') do |f|
+      random_name = rand(10000000).to_s
+      File.open(File.join(settings.files, random_name+".zip"), 'wb') do |f|
         f.write file.read
       end
-      new_dir = "public/files/#{filename.gsub(" ", "\\ ").gsub(".zip", "")}"
-      `unzip public/files/#{filename.gsub(" ", "\\ ")} -d public/files`
-      unpacked_files = `ls #{new_dir}/#{filename.gsub(" ", "\\ ").gsub(".zip", "")}`.split("\n")
+      new_dir = "public/files/#{random_name.gsub(".zip", "")}"
+      `unzip public/files/#{random_name}.zip -d public/files/#{random_name}`
+      unpacked_files = `ls #{new_dir}`.split("\n")-["__MACOSX"]
       texable_files = unpacked_files.select{|f| f.include?(".tex")}
-      tmp_dir = "public/files/tmp_#{rand(10000000)}"
-      texable_files.each do |tex_file|
-        `rubber -d --into #{new_dir} #{new_dir}/#{tex_file}`
+      if texable_files.empty? && unpacked_files.length == 1
+        new_new_dir = new_dir+"/"+unpacked_files.first.gsub(" ", "\\ ")
+        unpacked_files = `ls #{new_dir}/#{unpacked_files.first.gsub(" ", "\\ ")}`.split("\n")
+        new_dir = new_new_dir
+        texable_files = unpacked_files.select{|f| f.include?(".tex")}
       end
-      `zip -r9 #{new_dir}`
-      binding.pry
-      flash 'Upload successful'
-    else
-      flash 'You have to choose a file'
+      tmp_dir = "public/files/finished_#{random_name}"
+      `mkdir -p #{tmp_dir}`
+      texable_files.each do |tex_file|
+        `rubber -d --into #{tmp_dir} #{new_dir}/#{tex_file}`
+      end
+      `zip -r9 #{tmp_dir}.zip #{tmp_dir}`
+      zip_data = File.read("#{tmp_dir}.zip")
+      `rm -rf public/files/#{random_name}`
+      `rm -rf public/files/#{random_name}.zip`
+      `rm -rf public/files/finished_#{random_name}`
+      `rm -rf public/files/finished_#{random_name}.zip`
+      send_data zip_data, :filename => "#{filename}.zip"
     end
 
     redirect '/'
