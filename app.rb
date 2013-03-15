@@ -47,7 +47,7 @@ class LatexConvert < Sinatra::Base
         f.write file.read
       end
       new_dir = "public/files/#{filename.gsub(" ", "\\ ").gsub(".zip", "")}"
-      `unzip public/files/#{filename.gsub(" ", "\\ ")} -d #{new_dir}`
+      `unzip public/files/#{filename.gsub(" ", "\\ ")} -d public/files`
       unpacked_files = `ls #{new_dir}/#{filename.gsub(" ", "\\ ").gsub(".zip", "")}`.split("\n")
       texable_files = unpacked_files.select{|f| f.include?(".tex")}
       tmp_dir = "public/files/tmp_#{rand(10000000)}"
