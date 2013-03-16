@@ -63,11 +63,11 @@ class LatexConvert < Sinatra::Base
         f.write(tex_file_contents)
         f.close
         Dir.chdir(dir)
-        `pdflatex -shell-escape -interaction=nonstopmode #{tex_file}`
+        puts `pdflatex -shell-escape -interaction=nonstopmode #{tex_file}`
       end
       Dir.chdir(pwd)
       `zip -rj9 #{dir}.zip #{dir}`
-      `rm -rf #{dir}`
+      # `rm -rf #{dir}`
       redirect "#{dir}.zip".gsub("public/", "")
     end
 
