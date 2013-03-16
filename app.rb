@@ -67,9 +67,8 @@ class LatexConvert < Sinatra::Base
       end
       Dir.chdir(pwd)
       `zip -rj9 #{dir}.zip #{dir}`
-      `rm -rf public/files/#{random_name}`
-      binding.pry
-      send_file "#{dir}.zip", :filename => "#{filename}"
+      `rm -rf #{dir}`
+      redirect "#{dir}.zip"
     end
 
     redirect '/'
