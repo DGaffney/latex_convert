@@ -68,7 +68,7 @@ class LatexConvert < Sinatra::Base
       Dir.chdir(pwd)
       `zip -rj9 #{dir}.zip #{dir}`
       `rm -rf #{dir}`
-      redirect "#{dir}.zip"
+      redirect "#{dir}.zip".gsub("public/", "")
     end
 
     redirect '/'
