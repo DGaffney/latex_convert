@@ -59,9 +59,9 @@ class LatexConvert < Sinatra::Base
       tmp_dir = "public/files/finished_#{random_name}"
       `mkdir -p #{tmp_dir}`
       texable_files.each do |tex_file|
-        tex_file = File.read("#{new_dir}/#{tex_file}").gsub!(".eps}", "}")
+        tex_file_contents = File.read("#{new_dir}/#{tex_file}").gsub!(".eps}", "}")
         f = File.open("#{new_dir}/#{tex_file}", "w")
-        f.write(tex_file)
+        f.write(tex_file_contents)
         f.close
         `rubber -d --into #{tmp_dir} #{new_dir}/#{tex_file}`
       end
