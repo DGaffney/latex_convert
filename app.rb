@@ -46,6 +46,7 @@ class LatexConvert < Sinatra::Base
       File.open(File.join(settings.files, random_name+".zip"), 'wb') do |f|
         f.write file.read
       end
+      pwd = `pwd`.split("\n").first
       dir = "public/files/#{random_name.gsub(".zip", "")}"
       `unzip public/files/#{random_name}.zip -d public/files/#{random_name}`
       unpacked_files = `ls #{dir}`.split("\n")-["__MACOSX"]
@@ -65,11 +66,10 @@ class LatexConvert < Sinatra::Base
         binding.pry
         `pdflatex -shell-escape -interaction=nonstopmode #{tex_file}`
       end
+      Dir.chdir(pwd)
       `zip -rj9 #{dir}.zip #{dir}`
       `rm -rf public/files/#{random_name}`
-      `rm -rf public/files/#{random_name}.zip`
-      `rm -rf public/files/finished_#{random_name}`
-      send_file "#{tmp_dir}.zip", :filename => "#{filename}"
+      send_file "#{dir}.zip", :filename => "#{filename}"
     end
 
     redirect '/'
