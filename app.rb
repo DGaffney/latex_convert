@@ -46,23 +46,25 @@ class LatexConvert < Sinatra::Base
       File.open(File.join(settings.files, random_name+".zip"), 'wb') do |f|
         f.write file.read
       end
-      new_dir = "public/files/#{random_name.gsub(".zip", "")}"
+      dir = "public/files/#{random_name.gsub(".zip", "")}"
       `unzip public/files/#{random_name}.zip -d public/files/#{random_name}`
-      unpacked_files = `ls #{new_dir}`.split("\n")-["__MACOSX"]
+      unpacked_files = `ls #{dir}`.split("\n")-["__MACOSX"]
       texable_files = unpacked_files.select{|f| f.include?(".tex")}
       if texable_files.empty? && unpacked_files.length == 1
         new_new_dir = new_dir+"/"+unpacked_files.first.gsub(" ", "\\ ")
-        unpacked_files = `ls #{new_dir}/#{unpacked_files.first.gsub(" ", "\\ ")}`.split("\n")
+        unpacked_files = `ls #{dir}/#{unpacked_files.first.gsub(" ", "\\ ")}`.split("\n")
         new_dir = new_new_dir
         texable_files = unpacked_files.select{|f| f.include?(".tex")}
       end
-      tmp_dir = "public/files/finished_#{random_name}"
-      `mkdir -p #{tmp_dir}`
       texable_files.each do |tex_file|
-        tex_file_contents = File.read("#{new_dir}/#{tex_file}").gsub!(".eps}", "}")
-        f = File.open("#{new_dir}/#{tex_file}", "w")
+        tex_file_contents = File.read("#{dir}/#{tex_file}").gsub!(".eps}", "}")
+        f = File.open("#{dir}/#{tex_file}", "w")
         f.write(tex_file_contents)
         f.close
+        Dir.chdir(dir)
+        binding.pry
+        `pdflatex -shell-escape #{tex_file}`
+        `pdflatex -shell-escape -output-directory=#{tmp_dir} #{new_dir}/#{tex_file}`
         `rubber -d --into #{tmp_dir} #{new_dir}/#{tex_file}`
       end
       `zip -rj9 #{tmp_dir}.zip #{tmp_dir}`
