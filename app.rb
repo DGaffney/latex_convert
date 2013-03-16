@@ -64,7 +64,7 @@ class LatexConvert < Sinatra::Base
         #f.close
         Dir.chdir(dir)
         puts "pdflatex -shell-escape -interaction=nonstopmode #{tex_file}"
-        `pdflatex -shell-escape -interaction=nonstopmode #{tex_file}`
+        `pdflatex -shell-escape #{tex_file}`
       end
       Dir.chdir(pwd)
       `zip -rj9 #{dir}.zip #{dir}`
