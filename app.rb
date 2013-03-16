@@ -63,7 +63,6 @@ class LatexConvert < Sinatra::Base
         f.write(tex_file_contents)
         f.close
         Dir.chdir(dir)
-        binding.pry
         `pdflatex -shell-escape -interaction=nonstopmode #{tex_file}`
       end
       Dir.chdir(pwd)
