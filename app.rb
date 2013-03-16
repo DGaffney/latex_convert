@@ -63,11 +63,9 @@ class LatexConvert < Sinatra::Base
         f.close
         Dir.chdir(dir)
         binding.pry
-        `pdflatex -shell-escape #{tex_file}`
-        `pdflatex -shell-escape -output-directory=#{tmp_dir} #{new_dir}/#{tex_file}`
-        `rubber -d --into #{tmp_dir} #{new_dir}/#{tex_file}`
+        `pdflatex -shell-escape -interaction=nonstopmode #{tex_file}`
       end
-      `zip -rj9 #{tmp_dir}.zip #{tmp_dir}`
+      `zip -rj9 #{dir}.zip #{dir}`
       `rm -rf public/files/#{random_name}`
       `rm -rf public/files/#{random_name}.zip`
       `rm -rf public/files/finished_#{random_name}`
