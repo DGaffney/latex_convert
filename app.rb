@@ -51,9 +51,9 @@ class LatexConvert < Sinatra::Base
       unpacked_files = `ls #{dir}`.split("\n")-["__MACOSX"]
       texable_files = unpacked_files.select{|f| f.include?(".tex")}
       if texable_files.empty? && unpacked_files.length == 1
-        new_new_dir = new_dir+"/"+unpacked_files.first.gsub(" ", "\\ ")
+        new_dir = dir+"/"+unpacked_files.first.gsub(" ", "\\ ")
         unpacked_files = `ls #{dir}/#{unpacked_files.first.gsub(" ", "\\ ")}`.split("\n")
-        new_dir = new_new_dir
+        dir = new_dir
         texable_files = unpacked_files.select{|f| f.include?(".tex")}
       end
       texable_files.each do |tex_file|
