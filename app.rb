@@ -58,10 +58,10 @@ class LatexConvert < Sinatra::Base
         texable_files = unpacked_files.select{|f| f.include?(".tex")}
       end
       texable_files.each do |tex_file|
-        #tex_file_contents = File.read("#{dir}/#{tex_file}").gsub!(".eps}", "}")
-        #f = File.open("#{dir}/#{tex_file}", "w")
-        #f.write(tex_file_contents)
-        #f.close
+        tex_file_contents = File.read("#{dir}/#{tex_file}").gsub!(".eps}", "}")
+        f = File.open("#{dir}/#{tex_file}", "w")
+        f.write(tex_file_contents)
+        f.close
         Dir.chdir(dir)
         puts "pdflatex -shell-escape -interaction=nonstopmode #{tex_file}"
         `pdflatex -shell-escape #{tex_file}`
