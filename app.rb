@@ -71,6 +71,7 @@ class LatexConvert < Sinatra::Base
         dir = new_dir
         texable_files = unpacked_files.select{|f| f.include?(".tex")}
       end
+      binding.pry
       texable_files.each do |tex_file|
         tex_file_contents = File.read("#{dir}/#{tex_file}").gsub!(".eps}", "}").gsub!(/(\\documentclass.*\n)/, "#{$1}#{PREAMBLE_FOR_GRAPHICS}")
         f = File.open("#{dir}/#{tex_file}", "w")
@@ -78,7 +79,7 @@ class LatexConvert < Sinatra::Base
         f.close
         Dir.chdir(dir)
         puts "pdflatex -shell-escape -interaction=nonstopmode #{tex_file}"
-        `pdflatex -shell-escape #{tex_file}`
+        `pdflatex -shell-escape -interaction=nonstopmode #{tex_file}`
       end
       Dir.chdir(pwd)
       `zip -rj9 #{dir}.zip #{dir}`
