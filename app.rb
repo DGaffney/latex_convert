@@ -75,7 +75,7 @@ class LatexConvert < Sinatra::Base
       texable_files.each do |tex_file|
         tex_file_contents = File.read("#{dir}/#{tex_file}")
         tex_file_contents.gsub!(".eps}", "}")
-        tex_file_contents.gsub!(/(\\documentclass.*)/, "\r\n#{$1}#{PREAMBLE_FOR_GRAPHICS}\r\n") if !tex_file_contents.scan(/(\\documentclass.*)/).empty?
+        tex_file_contents.gsub!(/(\\documentclass.*)/, "\r\n#{$1}\r\n#{PREAMBLE_FOR_GRAPHICS}\r\n") if !tex_file_contents.scan(/(\\documentclass.*)/).empty?
         f = File.open("#{dir}/#{tex_file}", "w")
         f.write(tex_file_contents)
         f.close
