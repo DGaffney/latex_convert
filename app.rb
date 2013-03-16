@@ -71,7 +71,6 @@ class LatexConvert < Sinatra::Base
         dir = new_dir
         texable_files = unpacked_files.select{|f| f.include?(".tex")}
       end
-      binding.pry
       texable_files.each do |tex_file|
         tex_file_contents = File.read("#{dir}/#{tex_file}")
         tex_file_contents.gsub!(".eps}", "}")
