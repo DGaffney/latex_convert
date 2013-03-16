@@ -2,21 +2,21 @@ require 'rubygems' if RUBY_VERSION < "1.9"
 require 'sinatra/base'
 require 'erb'
 require 'pry'
-PREAMBLE_FOR_GRAPHICS = "\newif\ifpdf
-\ifx\pdfoutput\undefined
-   \pdffalse
-\else
-   \pdfoutput=1
-   \pdftrue
-\fi
-\ifpdf
-   \usepackage{graphicx}
-   \usepackage{epstopdf}
-   \DeclareGraphicsRule{.eps}{pdf}{.pdf}{`epstopdf #1}
-   \pdfcompresslevel=9
-\else
-   \usepackage{graphicx}
-\fi"
+PREAMBLE_FOR_GRAPHICS = "\\newif\\ifpdf
+\\ifx\\pdfoutput\\undefined
+   \\pdffalse
+\\else
+   \\pdfoutput=1
+   \\pdftrue
+\\fi
+\\ifpdf
+   \\usepackage{graphicx}
+   \\usepackage{epstopdf}
+   \\DeclareGraphicsRule{.eps}{pdf}{.pdf}{`epstopdf #1}
+   \\pdfcompresslevel=9
+\\else
+   \\usepackage{graphicx}
+\\fi"
 class LatexConvert < Sinatra::Base
   configure do
     enable :static
